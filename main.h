@@ -6,10 +6,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <sys/wait.h>
 
 void processes(char *line);
-char *get_location(char *command);
+char *get_path(char *command);
+char *construct_path(char *directory, char *command);
 void execmd(char **argv);
 void cleanup_memory(char **argv, int numofwords);
 void execute_with_child(char **argv);
