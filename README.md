@@ -9,6 +9,7 @@
 |main.c|starting point of the program|
 |processes.c| handler the shell program|
 |functions_0.c|tokenizer , free , fork functions|
+|execfuncs.c|handle the execution of the program|
 
 
 ## Run Command:-
