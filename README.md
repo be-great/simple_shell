@@ -1,6 +1,6 @@
 # simple_shell
 
-<img src"https://github.com/be-great/simple_shell/blob/main/images/2.png">
+<img src="https://github.com/be-great/simple_shell/blob/main/images/2.png">
 
 ## Files
 
