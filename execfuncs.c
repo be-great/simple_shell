@@ -22,7 +22,7 @@ void execmd(char **argv)
 	/*check if execution fails*/
 	if (execve(mainCommand, argv, environ) == -1)
 	{
-		perror("Error");
+		perror("Error");		
 	}
 }
 
