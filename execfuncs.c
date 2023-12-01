@@ -5,6 +5,8 @@
  * @argv: an array of strings for the commands and arguments
 */
 
+extern char **environ;
+
 void execmd(char **argv)
 {
 	char *command_passed = NULL, *mainCommand;
@@ -18,7 +20,7 @@ void execmd(char **argv)
 	mainCommand = get_path(command_passed);
 
 	/*check if execution fails*/
-	if (execve(mainCommand, argv, NULL) == -1)
+	if (execve(mainCommand, argv, environ) == -1)
 	{
 		perror("Error");
 	}
