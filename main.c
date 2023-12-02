@@ -8,40 +8,77 @@
 */
 int main(int argc, char **argv)
 {
-	char *line = NULL;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    error_h_t error_info;
 
-	size_t len = 0;
-	ssize_t read;
-	(void)argc, (void)argv;
+    (void)argc;  /* Suppress unused parameter warning*/
 
-	/* Non-interactive mode*/
-	if (!isatty(STDIN_FILENO))
+
+    /* Initialize error_info structure */
+    memset(&error_info, 0, sizeof(error_h_t));
+
+    /* Set filename */
+    error_info.fname = argv[0];
+
+    /* Non-interactive mode */
+    if (!isatty(STDIN_FILENO))
 	{
-		/* Read lines from standard input using getline*/
-		while ((read = getline(&line, &len, stdin)) != -1)
+        while ((read = getline(&line, &len, stdin)) != -1)
 		{
-			processes(line);
-		}
-		/*Cleanup*/
-		free(line);
-	}
-	/* Interactive mode*/
-	else
-	{
-		while (1)
-		{
-			printf("$ ");
-			read = getline(&line, &len, stdin);
-			if (read == -1)
+			if (is_empty_or_whitespace(line))
 			{
-				perror("Error reading line.");
-				free(line);
-				exit(1);
-			}
+                /* Skip processing for empty/whitespace lines*/
+                continue;
+            }
+            processes(line, &error_info);
+            if (error_info.status != 0)
+                return (error_info.status);
+        }
 
-			processes(line);
-		}
-	}
+        if (feof(stdin))
+		{
+            /* End of file reached, cleanup */
+            free(line);
+            exit(EXIT_SUCCESS);
+        }
+		else
+		{
+            perror("getline");
+            free(line);
+            exit(EXIT_FAILURE);
+        }
+    }
+    /* Interactive mode */
+    else {
+        while (1)
+		{
+            printf("$ ");
+            read = getline(&line, &len, stdin);
 
-	return (0);
+            if (read == -1)
+			{
+                /* Check for end of file */
+                if (feof(stdin))
+                    break;
+                else
+				{
+                    perror("getline");
+                    free(line);
+                    exit(EXIT_FAILURE);
+                }
+            }
+		
+            processes(line, &error_info);
+            if (error_info.status != 0)
+                return (error_info.status);
+
+
+        }
+
+        free(line);
+    }
+
+    return (error_info.status);
 }

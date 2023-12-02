@@ -1,0 +1,15 @@
+  else
+        {
+             int status;
+            waitpid(child_pid, &status, 0);
+
+            if (WIFEXITED(status)) {
+                printf("Child process exited with status: %d\n", WEXITSTATUS(status));
+                return (WIFEXITED(status));
+        } else if (WIFSIGNALED(status)) {
+            printf("Child process terminated by signal: %d\n", WTERMSIG(status));
+        } else {
+            printf("Unexpected exit status\n");
+        }
+        }
+    }
