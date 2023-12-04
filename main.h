@@ -47,4 +47,5 @@ void free_environ_copy(char **env);
 int is_empty_or_whitespace(const char *str);
 
 void cd_command(char **argv);
+void exit_cmd(char **argv);
 #endif

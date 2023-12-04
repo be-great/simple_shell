@@ -19,6 +19,10 @@ void processes(char *line, error_h_t *error_info)
 	{
 		cd_command(tokens);
 	}
+	else if (num_tokens > 0 && strcmp(tokens[0], "exit") == 0)
+	{
+		exit_cmd(tokens);
+	}
 	else
 	{
 		execute_with_child(tokens, error_info);

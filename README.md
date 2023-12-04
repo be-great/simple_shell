@@ -11,6 +11,7 @@
 |functions_0.c|tokenizer , free , fork functions|
 |functions_1.c|make copy of the enviroment ,ree the new enviroment located , check if str is empty of just spaces|
 |error_handler.c|print the error|
+|builins.c|handle the shell builins| 
 
 
 
