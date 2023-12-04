@@ -45,4 +45,6 @@ void printerr(error_h_t *error_info, const char *message);
 char **environ_copy();
 void free_environ_copy(char **env);
 int is_empty_or_whitespace(const char *str);
+
+void cd_command(char **argv);
 #endif
