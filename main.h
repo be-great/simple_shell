@@ -14,7 +14,10 @@
 #include <errno.h>
 #include <stdint.h>
 #include <ctype.h>
+#define NUM_BUILTINS 4;
 extern char **environ;
+
+
 /**
  * struct error_h - the stuct to handle error
  * @argv: the argument words
@@ -46,6 +49,9 @@ char **environ_copy();
 void free_environ_copy(char **env);
 int is_empty_or_whitespace(const char *str);
 
+/*BUILTINS*/
 void cd_command(char **argv);
+void print_env();
 void exit_cmd(char **argv);
+int execute_builtins(char **tokens, int num_tokens);
 #endif

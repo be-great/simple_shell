@@ -12,21 +12,16 @@ void processes(char *line, error_h_t *error_info)
 {
 	char **tokens;
 	int num_tokens;
+	int builtins;
 
 	tokenize_command(line, &tokens, &num_tokens, error_info);
 
-	if (num_tokens > 0 && strcmp(tokens[0], "cd") == 0)
-	{
-		cd_command(tokens);
-	}
-	else if (num_tokens > 0 && strcmp(tokens[0], "exit") == 0)
-	{
-		exit_cmd(tokens);
-	}
-	else
+	builtins = execute_builtins(tokens, num_tokens);
+
+	if (builtins != 0)
 	{
 		execute_with_child(tokens, error_info);
-		cleanup_memory(tokens, num_tokens);
 	}
+		cleanup_memory(tokens, num_tokens);
 
 }
