@@ -10,11 +10,12 @@
 
 void processes(char *line, error_h_t *error_info)
 {
-	char **tokens;
+	char **argv;
+
 	int num_tokens;
 
-	tokenize_command(line, &tokens, &num_tokens, error_info);
-	execute_with_child(tokens, error_info);
-	cleanup_memory(tokens, num_tokens);
+	tokenize_command(line, &argv, &num_tokens, error_info);
+	search_command(error_info);
+	cleanup_memory(argv, num_tokens, error_info);
 
 }

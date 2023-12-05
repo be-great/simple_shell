@@ -11,6 +11,9 @@
 |functions_0.c|tokenizer , free , fork functions|
 |functions_1.c|make copy of the enviroment ,ree the new enviroment located , check if str is empty of just spaces|
 |error_handler.c|print the error|
+|_getenv.c| write the funciton _getenv from scratch|
+|path_0.c|functions that handle the path task|
+|path_1.c|additional functions that handle the path task|
 
 
 

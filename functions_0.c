@@ -49,45 +49,39 @@ void tokenize_command(char *line, char ***argv, int *numofwords
 
 /**
 * execute_with_child - Execute the command with a child process.
-* @argv: The array of strings representing the command.
 * @error_info: Pointer to the error_h_t structure to update status.
 */
-void execute_with_child(char **argv, error_h_t *error_info)
+void execute_with_child(error_h_t *error_info)
 {
-	pid_t child_pid = fork();
-	(void) argv;
+	pid_t child_pid;
 
+
+	child_pid = fork();
 	if (child_pid == -1)
 	{
-		perror("Error in fork:");
-		exit(EXIT_FAILURE);
+		/* TODO: PUT ERROR FUNCTION */
+		perror("Error");
+		return;
 	}
-
 	if (child_pid == 0)
 	{
-		execmd(error_info);
+		if (execve(error_info->path, error_info->argv, environ_copy()) == -1)
+		{
+			if (errno == EACCES)
+				error_info->status = (126), exit(126);
+			error_info->status = (1), exit(1);
+		}
+		/* TODO: PUT ERROR FUNCTION */
 	}
 	else
 	{
-		int status = 0;
-        pid_t waited_pid = waitpid(child_pid, &status, 0);
-		 if (waited_pid == -1) {
-            perror("waitpid");
-            error_info->status = EXIT_FAILURE;
-        } else if (WIFEXITED(status)) {
-            error_info->status = WEXITSTATUS(status);
-        } else if (WIFSIGNALED(status)) {
-            error_info->status = EXIT_FAILURE;
-        } else if (WIFSTOPPED(status)) {
-            dprintf(STDERR_FILENO, "Child process stopped\n");
-            error_info->status = EXIT_FAILURE;
-        } else if (WIFCONTINUED(status)) {
-            dprintf(STDERR_FILENO, "Child process continued\n");
-            error_info->status = EXIT_FAILURE;
-        } else {
-            dprintf(STDERR_FILENO, "Unexpected exit status\n");
-            error_info->status = EXIT_FAILURE;
-        }
+		wait(&(error_info->status));
+		if (WIFEXITED(error_info->status))
+		{
+			error_info->status = WEXITSTATUS(error_info->status);
+			if (error_info->status == 126)
+				printerr(error_info, "Permission denied");
+		}
 	}
 }
 
@@ -97,13 +91,18 @@ void execute_with_child(char **argv, error_h_t *error_info)
 * cleanup_memory - Clean up allocated memory.
 * @argv: The array of strings to free.
 * @numofwords: The number of tokens in the array.
+* @error_info: the struct of the error
 */
-void cleanup_memory(char **argv, int numofwords)
+void cleanup_memory(char **argv, int numofwords, error_h_t *error_info)
 {
 	int i;
+
+	(void)(error_info);
 
 	/* Cleanup allocated memory */
 	for (i = 0; i < numofwords; i++)
 		free(argv[i]);
 	free(argv);
+	error_info->argv = NULL;
+	error_info->path = NULL;
 }

@@ -21,11 +21,12 @@ extern char **environ;
  * @line_count: where is error exist
  * @fname: the filenameWQELR; W Xsawasdfewc t'
  * @status: the error number exit(num) 1,2,3,126,127
+ * @path: the path of the command
  */
 typedef struct error_h
 {
 	char **argv;
-
+	char *path;
 	unsigned int line_count;
 
 	char *fname;
@@ -33,16 +34,25 @@ typedef struct error_h
 	int status;
 
 } error_h_t;
-void processes(char *line, error_h_t *error_info);
-char *get_path(char *command);
-char *construct_path(char *directory, char *command);
-void execmd(error_h_t *error_info);
-void cleanup_memory(char **argv, int numofwords);
-void execute_with_child(char **argv, error_h_t *error_info);
-void tokenize_command(char *line, char ***argv, int *numofwords,
-					error_h_t *error_info);
-void printerr(error_h_t *error_info, const char *message);
+
+char *_getenv(const char *name);
+char *get_path(error_h_t *info, char *pathstr, char *cmd);
+char *remove_semcolon(const char *path_var, int start, int stop);
+char *beginwith(const char *haystack, const char *needle);
+int iscommand(error_h_t *info, char *path);
+int command_exists(char *command, error_h_t *error_info);
+int is_empty_or_whitespace(const char *str);
 char **environ_copy();
 void free_environ_copy(char **env);
-int is_empty_or_whitespace(const char *str);
+void tokenize_command(char *line, char ***argv, int *numofwords
+
+, error_h_t *error_info);
+void execute_with_child(error_h_t *error_info);
+void cleanup_memory(char **argv, int numofwords, error_h_t *error_info);
+void search_command(error_h_t *error_info);
+int iscommand(error_h_t *error_info, char *path);
+int is_delimiter(char character, char *delimiter);
+
+void printerr(error_h_t *error_info, const char *message);
+void processes(char *line, error_h_t *error_info);
 #endif

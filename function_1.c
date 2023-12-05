@@ -9,6 +9,7 @@ int is_empty_or_whitespace(const char *str)
 	while (*str)
 	{
 		if (!isspace((unsigned char)*str))
+
 		{
 			return (0);  /* Not empty or whitespace*/
 		}
@@ -71,4 +72,30 @@ void free_environ_copy(char **env)
 		free(env[i]);
 	}
 	free(env);
+}
+/**
+* command_exists - check if command exist land
+* @command: the command
+* @error_info: the error struct
+* Return: 0 none exist and 1 existing
+*/
+int command_exists(char *command, error_h_t *error_info)
+{
+	if (command == NULL || command[0] == '\0')
+	{
+		/* Handle invalid command (e.g., print an error message).*/
+		printerr(error_info, "not found");
+		error_info->status = 127;
+		return (0);
+	}
+	if (access(command, F_OK) != -1)
+	{
+		return (1);
+	}
+	else
+	{
+		printerr(error_info, "not found");
+		error_info->status = 127;
+		return (0);
+	}
 }
