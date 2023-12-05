@@ -1,0 +1,55 @@
+#include "main.h"
+
+/**
+ * execute_builtins - a function for handling the biltins
+ * @tokens: the tokens from the argument
+ * @num_tokens: the number of tokens
+ * Return: void
+*/
+
+/**
+ * struct built_in - the structure to handle builtins
+ * @name: the name of the builtin
+ * @function: a function pointer
+*/
+
+typedef struct built_in
+{
+	const char *name;
+
+	void(*function)(char **tokens);
+
+} built_ins;
+
+
+static built_ins built_insFunc[] = {
+		{"cd", cd_command},
+		{"exit", exit_cmd},
+		{"env", print_env}
+
+	};
+
+int execute_builtins(char **tokens, int num_tokens)
+{
+	int i;
+	int num_builtin = NUM_BUILTINS;
+
+	if (num_tokens > 0)
+	{
+		for (i = 0; i < num_builtin; i++)
+		{
+			if (strcmp(tokens[0], built_insFunc[i].name) == 0)
+			{
+			 	built_insFunc[i].function(tokens);
+			 	return (0);
+			}
+		}
+
+	}
+
+	return (-1);
+}
+
+
+
+

@@ -14,7 +14,10 @@
 #include <errno.h>
 #include <stdint.h>
 #include <ctype.h>
+#define NUM_BUILTINS 4;
 extern char **environ;
+
+
 /**
  * struct error_h - the stuct to handle error
  * @argv: the argument words
@@ -55,4 +58,12 @@ int is_delimiter(char character, char *delimiter);
 
 void printerr(error_h_t *error_info, const char *message);
 void processes(char *line, error_h_t *error_info);
+int is_empty_or_whitespace(const char *str);
+
+/*BUILTINS*/
+void cd_command(char **argv);
+void print_env(void);
+void exit_cmd(char **argv);
+int execute_builtins(char **tokens, int num_tokens);
+
 #endif
