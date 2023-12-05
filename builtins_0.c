@@ -10,10 +10,9 @@ void cd_command(char **argv)
 {
 	int dir;
 	char *command;
-	char buffer[20000]; /*still looking for a way not to hardcode the buffer size*/
-
+	/*still looking for a way not to hardcode the buffer size*/
+	char buffer[20000];
 	command = argv[1];
-
 	if (command == NULL)
 	{
 		dir = chdir(getenv("HOME"));
@@ -51,7 +50,6 @@ void cd_command(char **argv)
 			{
 				setenv("PWD", getcwd(buffer, sizeof(buffer)), 1);
 			}
-
 	}
 
 }
@@ -61,13 +59,13 @@ void cd_command(char **argv)
  * @arg: the variable arument
 */
 
-void exit_cmd(char **argv)
+void exit_cmd(char **argv, error_h_t *error_info)
 {
 	char *command = argv[0];
 
 	if (command != NULL)
 	{
-		exit(EXIT_SUCCESS);
+		error_info->status = (EXIT_SUCCESS);
 	}
 }
 

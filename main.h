@@ -14,7 +14,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <ctype.h>
-#define NUM_BUILTINS 4;
+#define NUM_BUILTINS 4
 extern char **environ;
 
 
@@ -63,7 +63,7 @@ int is_empty_or_whitespace(const char *str);
 /*BUILTINS*/
 void cd_command(char **argv);
 void print_env(void);
-void exit_cmd(char **argv);
-int execute_builtins(char **tokens, int num_tokens);
+void exit_cmd(char **argv, error_h_t *error_info);
+int execute_builtins(char **tokens, int num_tokens, error_h_t *error_info);
 
 #endif
