@@ -7,7 +7,7 @@
 */
 void printerr(error_h_t *error_info, const char *message)
 {
-	dprintf(STDERR_FILENO, "%s: %u: %s: %s\n", error_info->fname,
+	dprintf(STDERR_FILENO, "%s: %u: %s: %s", error_info->fname,
 										error_info->line_count,
 										error_info->argv[0],
 										message);

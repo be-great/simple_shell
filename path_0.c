@@ -32,7 +32,7 @@ void search_command(error_h_t *error_info)
 		else if (*(error_info->argv[0]) != '\n')
 		{
 			error_info->status = 127;
-			printerr(error_info, "not found");
+			printerr(error_info, "not found\n");
 
 		}
 	}

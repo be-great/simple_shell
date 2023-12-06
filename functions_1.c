@@ -84,7 +84,7 @@ int command_exists(char *command, error_h_t *error_info)
 	if (command == NULL || command[0] == '\0')
 	{
 		/* Handle invalid command (e.g., print an error message).*/
-		printerr(error_info, "not found");
+		printerr(error_info, "not found\n");
 		error_info->status = 127;
 		return (0);
 	}
@@ -94,7 +94,7 @@ int command_exists(char *command, error_h_t *error_info)
 	}
 	else
 	{
-		printerr(error_info, "not found");
+		printerr(error_info, "not found\n");
 		error_info->status = 127;
 		return (0);
 	}

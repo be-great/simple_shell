@@ -57,16 +57,29 @@ void cd_command(char **argv)
 /**
  * exit_cmd - funtion to impement the exit builtin
  * @arg: the variable arument
+ * Return: the status of the exit
 */
 
-void exit_cmd(char **argv, error_h_t *error_info)
+int exit_cmd(char **argv, error_h_t *error_info)
 {
-	char *command = argv[0];
+	if (argv[1] != NULL && argv[0] != NULL)
+	{	/*check if argv[1] avild number and None negative*/
+		if (isnumber(argv[1]) && argv[1][0] != '-')
+		{
+			return (_atoi(argv[1]));
+		}
+		/* if it's not a nubmer print error*/
+		else
+		{
+			printerr(error_info, "Illegal number: ");
+			dprintf(STDERR_FILENO,"%s\n", argv[1]);
+			return (2);
+		}
 
-	if (command != NULL)
-	{
-		error_info->status = (EXIT_SUCCESS);
+		
+		
 	}
+	return (0);
 }
 
 void print_env(void)

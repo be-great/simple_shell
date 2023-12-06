@@ -80,7 +80,7 @@ void execute_with_child(error_h_t *error_info)
 		{
 			error_info->status = WEXITSTATUS(error_info->status);
 			if (error_info->status == 126)
-				printerr(error_info, "Permission denied");
+				printerr(error_info, "Permission denied\n");
 		}
 	}
 }
