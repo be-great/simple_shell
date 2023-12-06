@@ -38,6 +38,9 @@ typedef struct error_h
 
 } error_h_t;
 
+
+
+/*FUNCTIO PROTOTYPES*/
 char *_getenv(const char *name);
 char *get_path(error_h_t *info, char *pathstr, char *cmd);
 char *remove_semcolon(const char *path_var, int start, int stop);
@@ -61,7 +64,7 @@ void processes(char *line, error_h_t *error_info);
 int is_empty_or_whitespace(const char *str);
 
 /*BUILTINS*/
-void cd_command(char **argv);
+int cd_command(char **argv);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
 int execute_builtins(char **tokens, int num_tokens,

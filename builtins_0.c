@@ -6,13 +6,15 @@
 */
 static char prev_dir[20000] = "";
 
-void cd_command(char **argv)
+int cd_command(char **argv)
 {
 	int dir;
 	char *command;
-	/*still looking for a way not to hardcode the buffer size*/
-	char buffer[20000];
+	char *buffer;
 	command = argv[1];
+
+	buffer = malloc(strlen(command));
+
 	if (command == NULL)
 	{
 		dir = chdir(getenv("HOME"));
@@ -52,17 +54,26 @@ void cd_command(char **argv)
 			}
 	}
 
+	return (0);
+
 }
 
 /**
  * exit_cmd - funtion to impement the exit builtin
- * @arg: the variable arument
+ * @argv: the variable arument
+ * @error_info: a pointer to a a memeber of the error_h_t struct
  * Return: the status of the exit
 */
 
 int exit_cmd(char **argv, error_h_t *error_info)
 {
-	if (argv[1] != NULL && argv[0] != NULL)
+	if (argv[0] != NULL && (argv[1] == NULL ||
+			(strcmp(argv[0], "exit") == 0 && argv[1] == NULL)))
+	{
+		return (0);
+	}
+
+	else if (argv[1] != NULL && argv[0] != NULL)
 	{	/*check if argv[1] avild number and None negative*/
 		if (isnumber(argv[1]) && argv[1][0] != '-')
 		{
@@ -72,16 +83,20 @@ int exit_cmd(char **argv, error_h_t *error_info)
 		else
 		{
 			printerr(error_info, "Illegal number: ");
-			dprintf(STDERR_FILENO,"%s\n", argv[1]);
+			dprintf(STDERR_FILENO, "%s\n", argv[1]);
 			return (2);
 		}
 
-		
-		
+
 	}
 	return (0);
 }
 
+
+/**
+ * print_env- a function to handle printing env
+ * Return (void)
+*/
 void print_env(void)
 {
 	char **env_print = environ;
