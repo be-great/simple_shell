@@ -64,7 +64,8 @@ int is_empty_or_whitespace(const char *str);
 void cd_command(char **argv);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
-int execute_builtins(char **tokens, int num_tokens, error_h_t *error_info, char *line);
+int execute_builtins(char **tokens, int num_tokens,
+			error_h_t *error_info, char *line);
 
 /*string functions*/
 int isnumber(char numbers[]);
