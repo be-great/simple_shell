@@ -4,7 +4,6 @@
  * cd_command - the function to implemen the cd builtin
  * @argv: the arguments received
 */
-static char prev_dir[20000] = "";
 
 int cd_command(char **argv)
 {
@@ -13,55 +12,184 @@ int cd_command(char **argv)
 	char *buffer;
 	command = argv[1];
 
-	buffer = malloc(strlen(command));
-
 	if (command == NULL)
 	{
-		dir = chdir(getenv("HOME"));
-
+		dir = chdir(_getenv("HOME"));
 		if (dir != 0)
 		{
 			perror("cd");
-		}
-	}
-	else if (strcmp(command, "-") == 0) /*still working on this part*/
-	{
-		if (prev_dir[0] != '\0')
-		{
-			dir = chdir(prev_dir);
-
-			if (dir != 0)
-			{
-				perror("cd");
-			}
-			else
-			{
-				setenv("PWD", getcwd(buffer, sizeof(buffer)), 1);
-			}
+			return (-1);
 		}
 	}
 	else
 	{
-			dir = chdir(command);
+		long maxPath = pathconf(command, _PC_PATH_MAX);
 
+			if (maxPath == -1)
+			{
+				perror("pathconf");
+				return (-1);
+			}
+		buffer = malloc((size_t)maxPath + 1);
+
+		if (buffer == NULL)
+		{
+			perror("malloc");
+			return (-1);
+		}
+		if (strcmp(command, "-") == 0)
+		{
+			dir = cdDash(buffer, maxPath);
+		}
+		else
+		{
+			dir = changeDir(command, buffer, maxPath);
+		}
 			if (dir != 0)
 			{
-				perror("cd");
+				free(buffer);
+				return (dir);
 			}
-			else
-			{
-				setenv("PWD", getcwd(buffer, sizeof(buffer)), 1);
-			}
+
+			free(buffer);
 	}
-
 	return (0);
-
 }
+
+
+
+int changeDir(char *command, char *buffer, size_t maxPath)
+{
+	int dir;
+
+	dir = chdir(command);
+
+	if (dir != 0)
+	{
+		perror("cd");
+		free(buffer);
+		return (-1);
+	}
+	else
+	{
+		if (getcwd(buffer, (size_t)maxPath + 1) == NULL)
+		{
+			perror("getcwd");
+			return (-1);
+		}
+		else
+		{
+			setenv("PWD", buffer, 1);
+		}
+	}
+	return (0);
+}
+
+int cdDash(char *buffer, size_t maxPath)
+{
+    int dir;
+    char *oldpwd;
+
+    oldpwd = getenv("OLDPWD");
+
+    if (oldpwd == NULL)
+    {
+        fprintf(stderr, "cd: OLDPWD not set\n");
+        return -1;
+    }
+
+    dir = chdir(oldpwd);
+
+    if (dir != 0)
+    {
+        perror("cd");
+    }
+    else
+    {
+        if (getcwd(buffer, (size_t)maxPath + 1) == NULL)
+        {
+            perror("getcwd");
+            return (-1);
+        }
+        else
+        {
+            setenv("PWD", buffer, 1);
+        }
+    }
+	return (0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * exit_cmd - funtion to impement the exit builtin
  * @argv: the variable arument
- * @error_info: a pointer to a a memeber of the error_h_t struct
+ * @error_info: a pointer to a memeber of the error_h_t struct
  * Return: the status of the exit
 */
 

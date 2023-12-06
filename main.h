@@ -67,6 +67,8 @@ int is_empty_or_whitespace(const char *str);
 int cd_command(char **argv);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
+int changeDir(char *command, char *buffer, size_t maxPath);
+int cdDash(char *buffer, size_t maxPath);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
 
