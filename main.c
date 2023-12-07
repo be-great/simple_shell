@@ -114,17 +114,59 @@ int main(int argc, char **argv)
 	/* Set filename */
 	error_info.fname = argv[0];
 
-	(void)argc;
-	/* Non-interactive mode */
-	if (!isatty(STDIN_FILENO))
+	/* pass a file inside it there is commands to execute*/
+	if (argc > 1)
 	{
-		None_interactive(&error_info);
+		error_info.argv = argv;
+		execute_from_file(&error_info);
 	}
-	/* Interactive mode */
 	else
 	{
-		interactive(&error_info);
+		/* Non-interactive mode */
+		if (!isatty(STDIN_FILENO))
+		{
+			None_interactive(&error_info);
+		}
+		/* Interactive mode */
+		else
+		{
+			interactive(&error_info);
+		}
+	}
+	return (error_info.status);
+}
+/**
+ * execute_from_file - execute commands from a filename
+ * @error_info: error handler struct
+ */
+void execute_from_file(error_h_t *error_info)
+{
+	FILE *file = fopen(error_info->argv[1], "r");
+	char *line = NULL;
+	size_t line_size = 0;
+	size_t len;
+
+	if (file == NULL)
+	{
+		dprintf(STDERR_FILENO, "%s: 0: cannot open %s: %s",
+			error_info->argv[0],
+			error_info->argv[1],
+			"No such file\n");
+		error_info->status = 2;
+		return;
+	}
+	while (getline(&line, &line_size, file) != -1)
+	{
+
+		len = strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+		{
+			line[len - 1] = '\0';
+		}
+
+		processes(line, error_info);
 	}
 
-	return (error_info.status);
+	fclose(file);
+	free(line);
 }

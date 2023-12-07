@@ -75,4 +75,7 @@ int execute_builtins(char **tokens, int num_tokens,
 /*string functions*/
 int isnumber(char numbers[]);
 int _atoi(char *s);
+
+/*Task 16*/
+void execute_from_file(error_h_t *error_info);
 #endif
