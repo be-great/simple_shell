@@ -14,7 +14,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <ctype.h>
-#define NUM_BUILTINS 4
+#define PATH_MAX 4096
 extern char **environ;
 
 
@@ -67,7 +67,7 @@ int is_empty_or_whitespace(const char *str);
 int cd_command(char **argv);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
-int changeDir(char *command, char *buffer, size_t maxPath);
+int changeDir(char *command, char *buffer, size_t maxpath);
 int cdDash(char *buffer, size_t maxPath);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
