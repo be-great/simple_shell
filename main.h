@@ -40,7 +40,7 @@ typedef struct error_h
 
 
 
-/*FUNCTIO PROTOTYPES*/
+/*FUNCTION PROTOTYPES*/
 char *_getenv(const char *name);
 char *get_path(error_h_t *info, char *pathstr, char *cmd);
 char *remove_semcolon(const char *path_var, int start, int stop);
@@ -61,14 +61,15 @@ int is_delimiter(char character, char *delimiter);
 
 void printerr(error_h_t *error_info, const char *message);
 void processes(char *line, error_h_t *error_info);
+char *addprinterr(char *command);
+int dirError(char *command, error_h_t *error_info, char *buffer);
 int is_empty_or_whitespace(const char *str);
 
 /*BUILTINS*/
-int cd_command(char **argv);
+int cd_command(char **argv, error_h_t *error_info);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
-int changeDir(char *command, char *buffer, size_t maxpath);
-int cdDash(char *buffer, size_t maxPath);
+int changeDir(char *command, size_t maxpath, error_h_t *error_info);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
 

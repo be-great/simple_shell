@@ -20,7 +20,7 @@ error_h_t *error_info, char *line)
 	{
 		if (strcmp(command, "cd") == 0)
 		{
-			cd_command(tokens);
+			cd_command(tokens,error_info);
 			return (0);
 		}
 		else if (strcmp(command, "env") == 0)

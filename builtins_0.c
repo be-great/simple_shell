@@ -3,39 +3,44 @@
 /**
  * cd_command - the function to implemen the cd builtin
  * @argv: the arguments received
+ * @error_info: Pointer to the error_h_t structure
  * Return: 1 or -1 for failure and sucess
 */
 
-int cd_command(char **argv)
+int cd_command(char **argv, error_h_t *error_info)
 {
 	int dir;
-	char *command, *buffer;
+	char *command, *homePath;
 
 	command = argv[1];
 	if (command == NULL)
 	{
-		dir = chdir(_getenv("HOME"));
-		if (dir != 0)
+		homePath = _getenv("HOME");
+
+		if (homePath != NULL)
 		{
-			perror("cd");
-			return (-1);
+			dir = chdir(homePath);
+
+			if (dir != 0)
+			{
+				if (errno == EACCES)
+				{
+					char *message = addprinterr(command);
+
+					printerr(error_info, message);
+					free(message);
+				}
+				else
+				{
+					perror("cd");
+					return (-1);
+				}
+			}
 		}
 	}
 	else
 	{
-		buffer = malloc(PATH_MAX);
-
-		if (buffer == NULL)
-		{
-			perror("malloc");
-			return (-1);
-		}
-		else
-		{
-			dir = changeDir(command, buffer, PATH_MAX);
-
-			free(buffer);
-		}
+		dir = changeDir(command, PATH_MAX, error_info);
 	}
 	return (0);
 }
@@ -44,36 +49,91 @@ int cd_command(char **argv)
 /**
  * changeDir - a helping function to implement changing directory
  * @command: the command passed
- * @buffer: the buffe for storing directory path
  * @maxpath: maximum dir size
+ * @error_info: Pointer to the error_h_t structure
  * Return: -1 for failure
 */
 
-int changeDir(char *command, char *buffer, size_t maxpath)
+int changeDir(char *command, size_t maxpath, error_h_t *error_info)
 {
 	int dir;
+	char *buffer;
+
+	buffer = malloc(PATH_MAX);
+
+	if (buffer == NULL)
+	{
+		perror("malloc allocation failed");
+		return (-1);
+	}
 
 	dir = chdir(command);
 
 	if (dir != 0)
 	{
-		perror("cd");
-		return (dir);
+		dirError(command, error_info, buffer);
 	}
 	else
 	{
 		if (getcwd(buffer, maxpath) == NULL)
 		{
 			perror("getcwd");
+			free(buffer);
 			return (-1);
 		}
 		else
 		{
-			setenv("PWD", buffer, 1);
+			if (setenv("PWD", buffer, 1) != 0)
+			{
+				perror("setenv");
+				free(buffer);
+				return (-1);
+			}
 		}
+		free(buffer);
 	}
 	return (0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
