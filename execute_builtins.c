@@ -23,7 +23,7 @@ error_h_t *error_info, char *line)
 			cd_command(tokens,error_info);
 			return (0);
 		}
-		else if (strcmp(command, "env") == 0)
+		else if (_strcmp(command, "env") == 0)
 		{
 			print_env();
 			return (0);

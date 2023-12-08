@@ -23,9 +23,9 @@ char *addprinterr(char *command)
 {
 	char error_message[PATH_MAX];
 
-	strcpy(error_message, "can't cd to ");
-	strcat(error_message, command);
-	strcat(error_message, "\n");
+	_strcpy(error_message, "can't cd to ");
+	_strcat(error_message, command);
+	_strcat(error_message, "\n");
 	return (strdup(error_message));
 }
 

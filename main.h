@@ -69,13 +69,21 @@ int is_empty_or_whitespace(const char *str);
 int cd_command(char **argv, error_h_t *error_info);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
+int add_environ(const char *name, const char *value);
 int changeDir(char *command, size_t maxpath, error_h_t *error_info);
+int _setenv(const char *name, const char *value);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
 
 /*string functions*/
 int isnumber(char numbers[]);
 int _atoi(char *s);
+
+/*FUNCTION_HELPERS*/
+int _strlen(char *str);
+char *_strcpy(char *dest, char *src);
+char *_strcat(char *dest, char *src);
+int _strcmp(const char *str1, const char *str2);
 
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);

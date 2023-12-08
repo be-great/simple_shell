@@ -98,44 +98,6 @@ int changeDir(char *command, size_t maxpath, error_h_t *error_info)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * exit_cmd - funtion to impement the exit builtin
  * @argv: the variable arument
@@ -146,7 +108,7 @@ int changeDir(char *command, size_t maxpath, error_h_t *error_info)
 int exit_cmd(char **argv, error_h_t *error_info)
 {
 	if (argv[0] != NULL && (argv[1] == NULL ||
-			(strcmp(argv[0], "exit") == 0 && argv[1] == NULL)))
+			(_strcmp(argv[0], "exit") == 0 && argv[1] == NULL)))
 	{
 		return (0);
 	}
@@ -157,7 +119,7 @@ int exit_cmd(char **argv, error_h_t *error_info)
 		{
 			return (_atoi(argv[1]));
 		}
-		/* if it's not a nubmer print error*/
+		/* if it's not a number print error*/
 		else
 		{
 			printerr(error_info, "Illegal number: ");
