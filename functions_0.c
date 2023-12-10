@@ -6,36 +6,19 @@
 * @numofwords: Pointer to store the number of tokens.
 * @error_info: the error struct
 */
-void tokenize_command(char *line, char ***argv, int *numofwords
+void tokenize_command(char *line, char ***argv, int *numofwords,
 
-, error_h_t *error_info)
+		error_h_t *error_info)
 {
-	char *lineptr_copy = strdup(line); /* Need to free this later */
+	char *lineptr_copy = _strdup(line); /* Need to free this later */
 
-	char *token;
-
-	int i;
-
+	/* Use custom _strtow function for tokenization */
+	*argv = _strtow(lineptr_copy, " \n");
 	*numofwords = 0;
-	token = strtok(lineptr_copy, " \n");
-
-	while (token != NULL)
+	while ((*argv)[*numofwords] != NULL)
 	{
 		(*numofwords)++;
-		token = strtok(NULL, " \n");
 	}
-
-	/* Allocate space to hold the array of strings */
-	*argv = malloc(sizeof(char *) * (*numofwords + 1));
-	/* Store each token in the argv array */
-	token = strtok(line, " \n");
-
-	for (i = 0; token != NULL; i++)
-	{
-		(*argv)[i] = strdup(token); /* Need to free these later */
-		token = strtok(NULL, " \n");
-	}
-	(*argv)[*numofwords] = NULL;
 
 	/* Populate error_info with relevant information */
 	if (*numofwords > 0)
@@ -59,7 +42,6 @@ void execute_with_child(error_h_t *error_info)
 	child_pid = fork();
 	if (child_pid == -1)
 	{
-		/* TODO: PUT ERROR FUNCTION */
 		perror("Error");
 		return;
 	}
@@ -71,7 +53,6 @@ void execute_with_child(error_h_t *error_info)
 				error_info->status = (126), exit(126);
 			error_info->status = (1), exit(1);
 		}
-		/* TODO: PUT ERROR FUNCTION */
 	}
 	else
 	{

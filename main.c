@@ -36,7 +36,8 @@ void interactive(error_h_t *error_info)
 
 	while (1)
 	{
-		printf("$ ");
+		_putchar('$');
+		_putchar(' ');
 		read = getline(&line, &len, stdin);
 		if (read == -1)
 		{
@@ -110,7 +111,7 @@ int main(int argc, char **argv)
 {
 	error_h_t error_info;
 	/* Initialize error_info structure */
-	memset(&error_info, 0, sizeof(error_h_t));
+	_memset((char *)&error_info, 0, sizeof(error_h_t));
 	/* Set filename */
 	error_info.fname = argv[0];
 
@@ -148,17 +149,15 @@ void execute_from_file(error_h_t *error_info)
 
 	if (file == NULL)
 	{
-		dprintf(STDERR_FILENO, "%s: 0: cannot open %s: %s",
-			error_info->argv[0],
-			error_info->argv[1],
-			"No such file\n");
+		filerror(error_info->argv[0], ": 0: cannot open ", error_info->argv[1],
+					": No such file\n");
 		error_info->status = 2;
 		return;
 	}
 	while (getline(&line, &line_size, file) != -1)
 	{
 
-		len = strlen(line);
+		len = _strlen(line);
 		if (len > 0 && line[len - 1] == '\n')
 		{
 			line[len - 1] = '\0';

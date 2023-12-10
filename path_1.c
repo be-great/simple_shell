@@ -14,7 +14,7 @@ char *get_path(error_h_t *error_info, char *path_var, char *thecommand)
 
 	if (!path_var)
 		return (NULL);
-	if ((strlen(thecommand) > 2) && beginwith(thecommand, "./"))
+	if ((_strlen(thecommand) > 2) && beginwith(thecommand, "./"))
 	{
 		if (iscommand(error_info, thecommand))
 			return (thecommand);
@@ -25,11 +25,11 @@ char *get_path(error_h_t *error_info, char *path_var, char *thecommand)
 		{
 			path = remove_semcolon(path_var, j, i);
 			if (!*path)
-				strcat(path, thecommand);
+				_strcat(path, thecommand);
 			else
 			{
-				strcat(path, "/");
-				strcat(path, thecommand);
+				_strcat(path, "/");
+				_strcat(path, thecommand);
 			}
 			if (iscommand(error_info, path))
 				return (path);

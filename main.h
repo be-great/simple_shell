@@ -64,14 +64,16 @@ void processes(char *line, error_h_t *error_info);
 char *addprinterr(char *command);
 int dirError(char *command, error_h_t *error_info, char *buffer);
 int is_empty_or_whitespace(const char *str);
+void filerror(char *prname, char *msg0, char *fname, char *msg1);
+
 
 /*BUILTINS*/
 int cd_command(char **argv, error_h_t *error_info);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
-int add_environ(const char *name, const char *value);
+int add_environ(char *name, char *value);
 int changeDir(char *command, size_t maxpath, error_h_t *error_info);
-int _setenv(const char *name, const char *value);
+int _setenv(char *name, char *value);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
 
@@ -79,12 +81,19 @@ int execute_builtins(char **tokens, int num_tokens,
 int isnumber(char numbers[]);
 int _atoi(char *s);
 
-/*FUNCTION_HELPERS*/
+/*string_manipulation*/
 int _strlen(char *str);
 char *_strcpy(char *dest, char *src);
-char *_strcat(char *dest, char *src);
+char *_strcat(char *dest, const char *src);
 int _strcmp(const char *str1, const char *str2);
-
+int _putchar(char c);
+char *_memset(char *s, char b, unsigned int n);
+char *_strchr(char *s, char c);
+void _puts(char *str);
+char *_strdup(char *str);
+void intToString(int number, char *buffer);
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
+/*Task 7 : remove the use of strtok*/
+char **_strtow(char *str, const char *delim);
 #endif

@@ -18,9 +18,9 @@ error_h_t *error_info, char *line)
 
 	if (num_tokens > 0)
 	{
-		if (strcmp(command, "cd") == 0)
+		if (_strcmp(command, "cd") == 0)
 		{
-			cd_command(tokens,error_info);
+			cd_command(tokens, error_info);
 			return (0);
 		}
 		else if (_strcmp(command, "env") == 0)
@@ -28,7 +28,7 @@ error_h_t *error_info, char *line)
 			print_env();
 			return (0);
 		}
-		else if (strcmp(command, "exit") == 0)
+		else if (_strcmp(command, "exit") == 0)
 		{
 			status = exit_cmd(tokens, error_info);
 				error_info->status = status;

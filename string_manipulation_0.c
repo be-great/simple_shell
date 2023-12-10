@@ -47,7 +47,7 @@ char *_strcpy(char *dest, char *src)
  * Return: the concantonated string
 */
 
-char *_strcat(char *dest, char *src)
+char *_strcat(char *dest, const char *src)
 {
 	int dest_len = 0;
 	int src_pos = 0;
@@ -90,4 +90,46 @@ int _strcmp(const char *str1, const char *str2)
 	}
 
 	return (*(unsigned char *)str1 - *(unsigned char *)str2);
+}
+/**
+* intToString - convert integer to string
+* @number: the number
+* @buffer: the buffer
+*/
+void intToString(int number, char *buffer)
+{
+	char temp[1024];  /* Adjust the size as needed */
+	int i = 0;
+
+	/* Handle negative numbers */
+	if (number < 0)
+	{
+		*buffer++ = '-';
+		number = -number;
+	}
+
+	/* Handle the case when the number is 0 */
+	if (number == 0)
+	{
+		*buffer++ = '0';
+		*buffer = '\0';
+		return;
+	}
+
+	/* Temporary buffer to store the reversed string */
+	/* Extract digits and store them in the temporary buffer */
+	while (number > 0)
+	{
+		temp[i++] = '0' + (number % 10);
+		number /= 10;
+	}
+
+	/* Reverse the temporary buffer and copy it to the output buffer */
+	while (--i >= 0)
+	{
+		*buffer++ = temp[i];
+	}
+
+	/* Null-terminate the string */
+	*buffer = '\0';
 }

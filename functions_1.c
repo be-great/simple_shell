@@ -99,8 +99,13 @@ int command_exists(char *command, error_h_t *error_info)
 		return (0);
 	}
 }
-
-int add_environ(const char *name, const char *value)
+/**
+ * add_environ - add new enviroment variable
+ * @name: the name
+ * @value: the value
+ * Return: 0 success , -1 Not a success
+ */
+int add_environ(char *name, char *value)
 {
 	char *new_env;
 	int i;
@@ -108,16 +113,16 @@ int add_environ(const char *name, const char *value)
 	for (i = 0; environ[i] != NULL; i++)
 	{
 	}
-	new_env = malloc(strlen(name) + strlen(value) + 2);
+	new_env = malloc(_strlen(name) + _strlen(value) + 2);
 	if (new_env == NULL)
 	{
 		perror("malloc allocation failed");
 		return (-1);
 	}
 
-	strcpy(new_env, name);
-	strcat(new_env, "=");
-	strcat(new_env, value);
+	_strcpy(new_env, name);
+	_strcat(new_env, "=");
+	_strcat(new_env, value);
 
 	environ[i] = new_env;
 	environ[i + 1] = NULL;
