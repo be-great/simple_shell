@@ -1,34 +1,51 @@
 #include "main.h"
 
-int _setenv(const char *name, const char *value)
+int _setenv(char **argv)
 {
-	int i;
-	char *newEnv;
+    int i;
+    char *newEnv;
+    const char *name, *value;
+    char **env = environ;
 
-	for (i = 0; environ[i] != NULL; i++)
-	{
-		if (strncmp(environ[i], name, strlen(name)) == 0 && environ[i][strlen(name)] == '=')
-		{
-				newEnv = malloc(strlen(name) + strlen(value) + 2);
-				if (newEnv == NULL)
-				{
-					perror("malloc");
-					return(-1);
-				}
-				
-				strcpy(newEnv, name);
-				strcat(newEnv, "=");
-				strcat(newEnv, value);
+    if (argv == NULL || argv[1] == NULL || argv[2] == NULL)
+    {
+        perror("invalid VARIABLE VALUE\n");
+        return (-1);
+    }
 
-				free(environ[i]);
-				environ[i] = newEnv;
-				printenv();
-				return (0);
+    name = argv[1], value = argv[2];
 
-			}
-		}
-	add_environ(name, value);
-	print_env();
+    newEnv = malloc(strlen(name) + strlen(value) + 2);
+    if (newEnv == NULL)
+    {
+        perror("malloc");
+        return (-1);
+    }
+	
 
-	return (0);
+    for (i = 0; env[i] != NULL; i++)
+    {
+        if (strncmp(env[i], name, strlen(name)) == 0 && env[i][strlen(name)] == '=')
+        {
+            
+            strcpy(newEnv, name);
+            strcat(newEnv, "=");
+            strcat(newEnv, value);
+
+            
+            env[i] = newEnv;
+			
+            
+            return 0;
+        }
+		
+    }
+
+    
+    
+	
+	fprintf(stderr, "Error: Environment variable not found\n");
+	
+    return 0;
 }
+

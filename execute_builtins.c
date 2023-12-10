@@ -20,12 +20,17 @@ error_h_t *error_info, char *line)
 	{
 		if (strcmp(command, "cd") == 0)
 		{
-			cd_command(tokens,error_info);
+			cd_command(tokens, error_info);
 			return (0);
 		}
 		else if (_strcmp(command, "env") == 0)
 		{
 			print_env();
+			return (0);
+		}
+		else if (_strcmp(command, "setenv") == 0)
+		{
+			_setenv(tokens);
 			return (0);
 		}
 		else if (strcmp(command, "exit") == 0)

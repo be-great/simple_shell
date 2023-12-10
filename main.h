@@ -70,8 +70,8 @@ int cd_command(char **argv, error_h_t *error_info);
 void print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
 int add_environ(const char *name, const char *value);
+int _setenv(char **argv);
 int changeDir(char *command, size_t maxpath, error_h_t *error_info);
-int _setenv(const char *name, const char *value);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
 
