@@ -1,5 +1,52 @@
 #include "main.h"
 /**
+* variables_replacement - handle the varibles replacment
+* @error_info: the parameter & return info struct
+*/
+void variables_replacement(error_h_t *error_info)
+{
+	char *newstr;
+	size_t len;
+	char *env_value;
+
+	if (error_info->argv[0][0] == '$')
+	{
+
+		len = strlen(error_info->argv[0]) - 1;
+		newstr = (char *)malloc(len + 1);
+		strncpy(newstr, error_info->argv[0] + 1, len);
+		newstr[len] = '\0';  /** Null-terminate the string */
+
+		/** Get the value of the environment variable */
+		env_value = _getenv(newstr);
+
+		/** If the environment variable is found, update error_info->path*/
+		/* And error_info->argv[0] */
+		if (env_value != NULL)
+		{
+			free(error_info->argv[0]);
+			error_info->argv[0] = strdup(env_value);
+		}
+
+		free(newstr);
+	}
+	/* example : \/bin/echo => /bin/echo => remove the \ on the beginning*/
+	if (error_info->argv[0][0] == '\\')
+	{
+		len = strlen(error_info->path) - 1;
+		newstr = (char *)malloc(len + 1);
+		strncpy(newstr, error_info->path + 1, len);
+		newstr[len] = '\0';
+		free(error_info->argv[0]);
+		error_info->argv[0] = strdup(newstr);
+		error_info->path = error_info->argv[0];
+		free(newstr);
+	}
+
+	error_info->path = error_info->argv[0];
+}
+
+/**
 * search_command - search of the command on the PATH variable
 * @error_info: the parameter & return info struct
 */
@@ -10,12 +57,15 @@ void search_command(error_h_t *error_info)
 	int i, k;
 
 	error_info->path = error_info->argv[0];
+	/* Remove the spaces at the or new line at the begin of the line*/
 	for (i = 0, k = 0; error_info->argv[i]; i++)
 		if (!is_delimiter(error_info->argv[i][0], " \t\n"))
 			k++;
 	if (!k)
 		return;
-
+	/*-----------handle variables------------------*/
+	variables_replacement(error_info);
+	/*+++++++++++++end variables++++++++++++++++++++++*/
 	path = get_path(error_info, _getenv("PATH"), error_info->argv[0]);
 	if (path)
 	{
@@ -37,7 +87,6 @@ void search_command(error_h_t *error_info)
 		}
 	}
 }
-
 /**
 * iscommand - determines if a file is an executable command
 * @error_info: the error_info struct

@@ -1,0 +1,37 @@
+int cdDash(void)
+{
+    char *oldpwd = getenv("OLDPWD");
+    char *cwd;
+    int dir;
+
+    if (oldpwd == NULL)
+    {
+        fprintf(stderr, "cd: OLDPWD not set\n");
+        return -1;
+    }
+
+    cwd = getcwd(NULL, 0);
+
+    if (cwd == NULL)
+    {
+        perror("getcwd");
+        return -1;
+    }
+
+    dir = chdir(oldpwd);
+
+    if (dir != 0)
+    {
+        perror("cd");
+    }
+    else
+    {
+        setenv("OLDPWD", cwd, 1);
+        setenv("PWD", oldpwd, 1);
+    }
+
+    free(cwd);
+
+    return dir;
+}
+

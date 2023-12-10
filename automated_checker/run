@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+OK=0
+ERROR=0
+
+hsh="$1"
+checker="$2"
+
+shift 2
+tests=$*
+
+is_bash_script() {
+  if [ ! -f "$1" ]; then return 1; fi
+
+  line=$(head -1 "$1")
+  shebangs=("#!/usr/bin/env bash" "#!/usr/bin/bash" "#!/bin/bash")
+
+  for shebang in "${shebangs[@]}"; do
+    if [ "$line" == "$shebang" ]; then return 0; fi
+  done
+
+  return 1
+}
+
+print_usage() {
+  echo "Usage: $0 <hsh> <checker_script> <tests...>"
+  echo
+  echo "Args:"
+  printf "\thsh: is the shell executable\n"
+  printf "\tchecker_script: is the downloaded checker script file\n"
+  printf "\ttests[]: can be any number of: test_script/dirs or dirs of dirs contains test scripts\n"
+  echo
+  echo "Example: $0 ./hsh ./checker ./tests"
+  echo "Example: $0 ./hsh ./checker ./tests/task"
+  echo "Example: $0 ./hsh ./checker ./tests/task/test_case.bash"
+  echo "Example: $0 ./hsh ./checker ./test_case1.bash ./tests/task2/"
+  echo
+}
+
+test_file() {
+  echo -e "\e[34m-- testing:\e[0m $1"
+
+  if [[ $(uname -r) =~ "arch" ]]; then
+    export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
+  fi
+  output=$(/usr/bin/env bash "$checker" --valgrind "$hsh" "$1")
+
+  if [ "$output" == "OK" ]; then
+    echo -e "\e[32mOK\e[0m"
+    echo
+    (( OK++ ))
+  else
+    echo -e "\e[31mERROR\e[0m"
+    echo "to see the error run this command"
+    echo "\$ $checker --valgrind $hsh $1"
+    echo
+    echo "For arch users export that environment variable"
+    echo \$ export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
+    echo
+    (( ERROR++ ))
+  fi
+}
+
+test_path() {
+  if is_bash_script "$1"; then
+    test_file "$1"
+  elif [ -d "$1" ]; then
+    printf "\e[33m* checking dir:\e[0m %s\n\n" "$1"
+    for path in "$1"/*; do test_path "$path"; done
+  else
+    echo "skipping: $1"
+  fi
+}
+
+if [ -z "$hsh" ] || [ ! -f "$hsh" ] || [ ! -x "$hsh" ]; then
+  print_usage
+  echo "ERROR: <hsh> must be an executable file: $hsh"
+  exit 1
+fi
+
+if [ -z "$checker" ] || [ ! -f "$checker" ]; then
+  print_usage
+  echo "ERROR: <checker> is not exists: $checker"
+  exit 1
+fi
+
+for test in $tests; do test_path "$test"; done
+
+total=$(( OK + ERROR ))
+echo -e "\e[34mTESTS\e[0m=$total \e[32mDONE\e[0m=$OK \e[31mFAILED\e[0m=$ERROR"

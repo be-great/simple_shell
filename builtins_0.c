@@ -123,7 +123,8 @@ int exit_cmd(char **argv, error_h_t *error_info)
 		else
 		{
 			printerr(error_info, "Illegal number: ");
-			dprintf(STDERR_FILENO, "%s\n", argv[1]);
+			write(STDERR_FILENO, argv[1], _strlen(argv[1]));
+			write(STDERR_FILENO, "\n", 1);
 			return (2);
 		}
 

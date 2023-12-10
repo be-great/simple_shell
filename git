@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Add all changes except the script itself to the staging area
+git add *.c main.h README.md hsh
+# Prompt for a commit message
+echo "Enter your commit message and press Enter:"
+read commit_message
+
+# Commit changes with the provided message
+git commit -m "$commit_message"
+
+# Push changes to the remote repository
