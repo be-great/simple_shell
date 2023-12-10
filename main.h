@@ -65,7 +65,7 @@ char *addprinterr(char *command);
 int dirError(char *command, error_h_t *error_info, char *buffer);
 int is_empty_or_whitespace(const char *str);
 void filerror(char *prname, char *msg0, char *fname, char *msg1);
-
+void rm_comments(char *line, ssize_t *read);
 
 /*BUILTINS*/
 int cd_command(char **argv, error_h_t *error_info);
@@ -92,8 +92,16 @@ char *_strchr(char *s, char c);
 void _puts(char *str);
 char *_strdup(char *str);
 void intToString(int number, char *buffer);
+char *_strncpy(char *dest, char *src, int n);
+int numlen(int number);
+char *intToString_2(int number);
+void pidToString(pid_t pid, char *str, size_t size);
+size_t pidlen(pid_t pid);
+
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
 /*Task 7 : remove the use of strtok*/
 char **_strtow(char *str, const char *delim);
+/*Task 14 : handle variable replacement*/
+pid_t get_original_pid(void);
 #endif

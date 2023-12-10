@@ -1,4 +1,29 @@
 #include "main.h"
+
+/**
+* rm_comments - remove the commnets we find
+* @line: the string
+* @read: number of character readed include '\n'
+*/
+void rm_comments(char *line, ssize_t *read)
+{
+	char *commentPos = strchr(line, '#');
+	/* Remove newline from the string*/
+	if (line[*read - 1] == '\n')
+	{
+		line[*read - 1] = '\0';
+		read--;
+	}
+	/* Check if '#' is found and it is the */
+	/*first character or before it is a space*/
+	if (commentPos != NULL)
+	{
+		/* 1- case `echo dfdf#dlfjkd =   dfdf#dlfjkd*/
+		/* 2- case `echo dfdf #dlfjkd =   dfdf*/
+		if (commentPos == line || commentPos[-1] == ' ')
+			*commentPos = '\0'; /* Truncate the string at the position of '#'*/
+	}
+}
 /**
 * processes - handle the common code for interactive and non interactive
 * mode.

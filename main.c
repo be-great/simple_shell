@@ -1,29 +1,16 @@
 #include "main.h"
 
+/*static becasue we going to change it on the main.c*/
+static pid_t original_pid;
 /**
-* rm_comments - remove the commnets we find
-* @line: the string
-* @read: number of character readed include '\n'
-*/
-void rm_comments(char *line, ssize_t *read)
+ * get_original_pid - Get the original pid of the program running
+ * Return: the original pid value
+ */
+pid_t get_original_pid(void)
 {
-	char *commentPos = strchr(line, '#');
-	/* Remove newline from the string*/
-	if (line[*read - 1] == '\n')
-	{
-		line[*read - 1] = '\0';
-		read--;
-	}
-	/* Check if '#' is found and it is the */
-	/*first character or before it is a space*/
-	if (commentPos != NULL)
-	{
-		/* 1- case `echo dfdf#dlfjkd =   dfdf#dlfjkd*/
-		/* 2- case `echo dfdf #dlfjkd =   dfdf*/
-		if (commentPos == line || commentPos[-1] == ' ')
-			*commentPos = '\0'; /* Truncate the string at the position of '#'*/
-	}
+	return (original_pid);
 }
+
 /**
 * interactive - handle the interactive mode
 * @error_info: passing the error info structure
@@ -111,10 +98,10 @@ int main(int argc, char **argv)
 {
 	error_h_t error_info;
 	/* Initialize error_info structure */
-	_memset((char *)&error_info, 0, sizeof(error_h_t));
+	memset(&error_info, 0, sizeof(error_h_t));
 	/* Set filename */
 	error_info.fname = argv[0];
-
+	original_pid = getpid();
 	/* pass a file inside it there is commands to execute*/
 	if (argc > 1)
 	{
