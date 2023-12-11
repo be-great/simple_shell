@@ -106,7 +106,7 @@ int command_exists(char *command, error_h_t *error_info)
  * @value: the value
  * Return: 0 success , -1 Not a success
  */
-int add_environ(const char *name, const char *value)
+int add_environ(char *name, char *value)
 {
 	char *new_env;
 	int i;

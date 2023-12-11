@@ -15,6 +15,7 @@ void handle_variables(error_h_t *error_info, pid_t original_pid)
 		{
 			free(error_info->argv[i]);
 			error_info->argv[i] = intToString_2(error_info->status);
+
 		}
 		/* Handle $$ variable */
 		else if (_strcmp(error_info->argv[i], "$$") == 0)
@@ -29,8 +30,10 @@ void handle_variables(error_h_t *error_info, pid_t original_pid)
 		else if (error_info->argv[i][0] == '$' && error_info->argv[i][1] != '\0')
 		{
 			char *variable = NULL;
+
 			size_t len = _strlen(error_info->argv[i]) - 1;
 			char *newstr;
+
 			int escape = 1;
 
 			newstr = (char *)malloc(len + 2);
