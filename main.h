@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <ctype.h>
 #define PATH_MAX 4096
+#define NUM_BUILTIN 6
 extern char **environ;
 
 
@@ -69,9 +70,11 @@ void rm_comments(char *line, ssize_t *read);
 
 /*BUILTINS*/
 int cd_command(char **argv, error_h_t *error_info);
-void print_env(void);
+int print_env(void);
 int exit_cmd(char **argv, error_h_t *error_info);
-int _setenv(char **argv);
+int cdDash(char *command, size_t maxpath, error_h_t *error_info);
+int setenv_builtin(char **argv, error_h_t *error_info);
+int unsetenv_builtin(char **argv, error_h_t *error_info);
 int changeDir(char *command, size_t maxpath, error_h_t *error_info);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
@@ -96,6 +99,7 @@ int numlen(int number);
 char *intToString_2(int number);
 void pidToString(pid_t pid, char *str, size_t size);
 size_t pidlen(pid_t pid);
+int _setenv(const char *name, const char *value, int overwrite);
 
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);

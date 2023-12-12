@@ -28,9 +28,14 @@ error_h_t *error_info, char *line)
 			print_env();
 			return (0);
 		}
-		else if (_strcmp(command, "setenv") == 0)
+		else if (strcmp(command, "setenv") == 0)
 		{
-			_setenv(tokens);
+			setenv_builtin(tokens, error_info);
+			return (0);
+		}
+		else if(strcmp(command, "unsetenv") == 0)
+		{
+			unsetenv_builtin(tokens, error_info);
 			return (0);
 		}
 		else if (strcmp(command, "exit") == 0)
