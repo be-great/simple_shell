@@ -56,43 +56,36 @@ void interactive(error_h_t *error_info)
 void None_interactive(error_h_t *error_info)
 {
 	char *line = NULL;
-
 	size_t len = 0;
 	ssize_t read;
 
-	while (1)
+	while ((read = getline(&line, &len, stdin)) != -1)
 	{
-		read = getline(&line, &len, stdin);
-		if (read == -1)
+		/*-----------remove the comment*/
+		if (read > 0)
+			rm_comments(line, &read);
+		/*-------------------------------*/
+		if (is_empty_or_whitespace(line))
 		{
-			/* Check for end of file */
-			if (feof(stdin))
-			{
-				break;
-			}
-			else
-			{
-				perror("getline");
-				free(line);
-				exit(EXIT_FAILURE);
-			}
+			/* Skip processing for empty/whitespace lines */
+			continue;
 		}
-			/*-----------remove the comment*/
-			if (read > 0)
-				rm_comments(line, &read);
-			/*-------------------------------*/
-			if (is_empty_or_whitespace(line))
-			{
-				/* Skip processing for empty/whitespace lines */
-				continue;
-			}
-			processes(line, error_info);
-			if (error_info->status != 0)
-			{
-				free(line), exit(error_info->status);
-			}
+		processes(line, error_info);
+		if (error_info->status != 0)
+		{
+			free(line), exit(error_info->status);
+		}
 	}
-	free(line);
+	if (feof(stdin))
+	{
+		/* End of file reached, cleanup */
+		free(line), exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		perror("getline"), free(line);
+		exit(EXIT_FAILURE);
+	}
 }
 
 /**
@@ -130,7 +123,6 @@ int main(int argc, char **argv)
 	}
 	return (error_info.status);
 }
-
 /**
  * execute_from_file - execute commands from a filename
  * @error_info: error handler struct
