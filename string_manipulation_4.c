@@ -34,7 +34,7 @@ int _strncmp(const char *str1, const char *str2, size_t n)
 */
 int _setenv(char *name, char *value, int overwrite)
 {
-	int i = 0;
+	int i;
 	char **env = environ;
 	char *new_env;
 
@@ -42,11 +42,12 @@ int _setenv(char *name, char *value, int overwrite)
 	{
 		return (-1);
 	}
-	while (env[i])
+	for (i = 0; env[i] != NULL; i++)
 	{
-		if (_strncmp(env[i], name, _strlen(name)) == 0 && env[i][_strlen(name)] == '=')
+		if (_strncmp(env[i], name, _strlen(name)) == 0
+		&& env[i][_strlen(name)] == '=')
 		{
-			if (overwrite > 0)
+			if (overwrite)
 			{
 				new_env = malloc(_strlen(name) + _strlen(value) + 2);
 				if (new_env == NULL)
@@ -58,20 +59,17 @@ int _setenv(char *name, char *value, int overwrite)
 				_strcat(new_env, "=");
 				_strcat(new_env, value);
 
-				free_environ_copy(env);
 				env[i] = new_env;
 
 				return (0);
 			}
 			return (0);
 		}
-		i++;
 
 	}
 
 	if (add_environ(env, name, value, i) != 0)
 	{
-		free_environ_copy(env);
 		return (-1);
 	}
 	return (0);
@@ -97,15 +95,15 @@ int add_environ(char **env, char *name, char *value, int i)
 		return (-1);
 	}
 
-	strcpy(new_env, name);
-	strcat(new_env, "=");
-	strcat(new_env, value);
+	_strcpy(new_env, name);
+	_strcat(new_env, "=");
+	_strcat(new_env, value);
 
-	
+
 	env[i] = new_env;
 	env[i + 1] = NULL;
 
-	
+
 	return (0);
 }
 
@@ -128,7 +126,8 @@ int _unsetenv(char *name)
 
 	while (env[i])
 	{
-		if (_strncmp(env[i], name, _strlen(name)) == 0 && env[i][_strlen(name)] == '=')
+		if (_strncmp(env[i], name, _strlen(name)) == 0
+		&& env[i][_strlen(name)] == '=')
 		{
 			j = i;
 			while (env[j] != NULL)

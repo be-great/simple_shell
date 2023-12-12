@@ -136,12 +136,17 @@ int exit_cmd(char **argv, error_h_t *error_info)
 
 /**
  * print_env- a function to handle printing env
+ * @argv: the variable arument
+ * @error_info: a pointer to a memeber of the error_h_t struct
  * Return: 0
 */
-int print_env(void)
+int print_env(char **argv, error_h_t *error_info)
 {
 	char **env_print = environ;
 	size_t len;
+
+	(void)argv;
+	(void)error_info;
 
 	while (*env_print != NULL)
 	{

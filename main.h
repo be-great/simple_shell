@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <ctype.h>
 #define PATH_MAX 4096
-#define NUM_BUILTIN 6
+#define NUM_BUILTIN 5
 extern char **environ;
 
 
@@ -39,6 +39,18 @@ typedef struct error_h
 
 } error_h_t;
 
+/**
+ * struct builtin_cmd - the struct to handle builtins
+ * @command_name: the name of the command
+ * @builtin_func: the function pointer to the various functions
+*/
+typedef struct builtin_cmd
+{
+	char *command_name;
+
+	int (*builtin_func)(char **argv, error_h_t *error_info);
+
+} builtin_cmd_t;
 
 
 /*FUNCTION PROTOTYPES*/
@@ -72,12 +84,13 @@ int add_environ(char **env, char *name, char *value, int i);
 
 /*BUILTINS*/
 int cd_command(char **argv, error_h_t *error_info);
-int print_env(void);
+int print_env(char **argv, error_h_t *error_info);
 int exit_cmd(char **argv, error_h_t *error_info);
 int cdDash(char *command, size_t maxpath, error_h_t *error_info);
 int setenv_builtin(char **argv, error_h_t *error_info);
 int unsetenv_builtin(char **argv, error_h_t *error_info);
 int changeDir(char *command, size_t maxpath, error_h_t *error_info);
+builtin_cmd_t *initbuiltin(void);
 int execute_builtins(char **tokens, int num_tokens,
 			error_h_t *error_info, char *line);
 

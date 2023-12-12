@@ -26,9 +26,8 @@ int setenv_builtin(char **argv, error_h_t *error_info)
 		&& env[i][_strlen(variable)] == '=')
 		{
 
-			if (_setenv(variable, value, 1) != 0)
+			if (setenv(variable, value, 1) != 0)
 			{
-				
 				perror("setenv");
 				return (-1);
 			}
@@ -36,9 +35,8 @@ int setenv_builtin(char **argv, error_h_t *error_info)
 		}
 	}
 
-	if (_setenv(variable, value, 0) != 0)
+	if (setenv(variable, value, 0) != 0)
 	{
-		
 		perror("setenv");
 		return (-1);
 	}
