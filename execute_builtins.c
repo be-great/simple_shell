@@ -33,7 +33,7 @@ error_h_t *error_info, char *line)
 			setenv_builtin(tokens, error_info);
 			return (0);
 		}
-		else if(strcmp(command, "unsetenv") == 0)
+		else if (strcmp(command, "unsetenv") == 0)
 		{
 			unsetenv_builtin(tokens, error_info);
 			return (0);

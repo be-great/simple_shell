@@ -94,3 +94,4 @@ int dirError(char *command, error_h_t *error_info, char *buffer)
 		free(buffer);
 		return (-1);
 }
+

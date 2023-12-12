@@ -83,7 +83,7 @@ int changeDir(char *command, size_t maxpath, error_h_t *error_info)
 		}
 		else
 		{
-			if (_setenv("PWD", buffer, 1) != 0)
+			if (setenv("PWD", buffer, 1) != 0)
 			{
 				perror("setenv");
 				free(buffer);
@@ -136,7 +136,7 @@ int exit_cmd(char **argv, error_h_t *error_info)
 
 /**
  * print_env- a function to handle printing env
- * Return (void)
+ * Return: 0
 */
 int print_env(void)
 {
