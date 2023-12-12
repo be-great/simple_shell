@@ -99,33 +99,3 @@ int command_exists(char *command, error_h_t *error_info)
 		return (0);
 	}
 }
-
-/**
- * add_environ - add new enviroment variable
- * @env: the environ
- * @name: the name
- * @value: the value
- * @i: the index
- * Return: 0 success , -1 Not a success
- */
-int add_environ(char **env, const char *name, const char *value, int i)
-{
-	char *new_env;
-
-	new_env = malloc(strlen(name) + strlen(value) + 2);
-	if (new_env == NULL)
-	{
-		perror("malloc allocation failed");
-		return (-1);
-	}
-
-	strcpy(new_env, name);
-	strcat(new_env, "=");
-	strcat(new_env, value);
-
-	env[i] = new_env;
-	env[i + 1] = NULL;
-
-	free(new_env);
-	return (0);
-}

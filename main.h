@@ -68,7 +68,7 @@ int is_empty_or_whitespace(const char *str);
 void filerror(char *prname, char *msg0, char *fname, char *msg1);
 void rm_comments(char *line, ssize_t *read);
 void cleanup_env(void);
-int add_environ(char **env, const char *name, const char *value, int i);
+int add_environ(char **env, char *name, char *value, int i);
 
 /*BUILTINS*/
 int cd_command(char **argv, error_h_t *error_info);
@@ -102,7 +102,8 @@ char *intToString_2(int number);
 void pidToString(pid_t pid, char *str, size_t size);
 size_t pidlen(pid_t pid);
 int _strncmp(const char *str1, const char *str2, size_t n);
-int _setenv(const char *name, const char *value, int overwrite);
+int _setenv(char *name, char *value, int overwrite);
+int _unsetenv(char *name);
 
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
