@@ -16,6 +16,7 @@ void handle_variables(error_h_t *error_info, pid_t original_pid)
 		{
 			free(error_info->argv[i]);
 			error_info->argv[i] = intToString_2(error_info->status);
+
 		}
 		/* Handle $$ variable */
 		else if (_strcmp(error_info->argv[i], "$$") == 0)
@@ -36,14 +37,13 @@ void handle_variables(error_h_t *error_info, pid_t original_pid)
 
 			newstr = (char *)malloc(len + 2);
 			_strncpy(newstr, error_info->argv[i] + escape, len + 1);
-			newstr[len + 1] = '\0';  /* Null-terminate the string */
-			variable = _getenv(newstr), free(error_info->argv[i]);
+			newstr[len + 1] = '\0', variable = _getenv(newstr);
+			free(error_info->argv[i]);
 			if (variable != NULL && variable[0] != '\0')
 				error_info->argv[i] = _strdup(variable);
 			else
 				error_info->argv[i] = _strdup("");
-			free(newstr);
-			free(variable);
+			free(newstr), free(variable);
 		}
 	}
 }

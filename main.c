@@ -88,10 +88,6 @@ void None_interactive(error_h_t *error_info)
 				continue;
 			}
 			processes(line, error_info);
-			if (error_info->status != 0)
-			{
-				free(line), exit(error_info->status);
-			}
 	}
 	free(line);
 }
@@ -125,9 +121,7 @@ int main(int argc, char **argv)
 		}
 		/* Interactive mode */
 		else
-		{
 			interactive(&error_info);
-		}
 	}
 	return (error_info.status);
 }
@@ -163,8 +157,7 @@ void execute_from_file(error_h_t *error_info)
 	while ((read_size = read_line(file, &line, &line_size)) > 0)
 	{
 		size_t len = _strlen(line);
-		/* Print the length of the line */
-		/*printf("len : %ld , read_size : %ld , line : %s\n",len, read_size, line);*/
+
 		if (len > 0)
 		{
 			processes(line, error_info);
