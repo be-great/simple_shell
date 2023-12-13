@@ -43,10 +43,9 @@ error_h_t *error_info, char *line)
 		{
 			if (_strcmp(command, builtins[i].command_name) == 0)
 			{
-				builtins[i].builtin_func(tokens, error_info);
-
 				if (_strcmp(command, "exit") != 0)
 				{
+					builtins[i].builtin_func(tokens, error_info);
 					return (0);
 				}
 				else
