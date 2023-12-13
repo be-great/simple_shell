@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <ctype.h>
+#include <fcntl.h>
 #define PATH_MAX 4096
 #define NUM_BUILTIN 5
 extern char **environ;
