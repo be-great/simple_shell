@@ -22,7 +22,25 @@ This project is a simple shell implementation written in C. It provides a basic 
 - **Command Execution:** Execute commands entered by the user.
 - **Built-in Commands:** Supports built-in commands like `cd`, `exit`, etc.
 - **Error Handling:** Provides informative error messages for invalid , same way a bash shell does.
-- **Script Execution:** Allows running shell scripts and allows running a file.
+- **File Input:** Allows running shell scripts and allows running a file. Usage: simple_shell [filename].
+
+## Getting Started
+
+### Prerequisites
+
+- A C compiler (e.g., GCC)
+- Unix-like operating system
+
+### Installation
+
+1. **Clone the repository:**
+    git clone `https://github.com/be-great/simple_shell.git`
+
+2. **Navigate to project directory:**
+    cd `simple_shell`
+
+3. **compile the code:**
+    gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
 
 ## Files
