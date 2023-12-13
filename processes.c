@@ -19,7 +19,7 @@ ssize_t read_line(int fd, char **line, size_t *line_size)
 		{
 			/* Double the buffer size if needed */
 			*line_size *= 2;
-			*line = realloc(*line, *line_size);
+			*line = _realloc(*line, *line_size / 2, *line_size);
 			if (*line == NULL)
 			{
 				perror("realloc");
