@@ -15,7 +15,15 @@ A simple shell implementation in C.
 
 ## Introduction
 
-This project is a simple shell implementation written in C. It provides a basic command-line interface for users to interact with the system.
+This project is a simple shell implementation written in C. It provides a basic command-line interface for users to interact with the system. Inspired by the fundamental principles of Unix/bash shells, our simple shell aims to offer a functional environment for executing commands and managing processes.
+
+## Features
+
+- **Command Execution:** Execute commands entered by the user.
+- **Built-in Commands:** Supports built-in commands like `cd`, `exit`, etc.
+- **Error Handling:** Provides informative error messages for invalid , same way a bash shell does.
+- **Script Execution:** Allows running shell scripts and allows running a file.
+
 
 ## Files
 
