@@ -1,6 +1,21 @@
 # simple_shell
+A simple shell implementation in C.
 
 <img src="https://github.com/be-great/simple_shell/blob/main/images/2.png">
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Acknowledgments](#acknowledgments)
+
+## Introduction
+
+This project is a simple shell implementation written in C. It provides a basic command-line interface for users to interact with the system.
 
 ## Files
 
