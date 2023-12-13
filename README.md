@@ -1,6 +1,7 @@
 # simple_shell
 A simple shell implementation in C.
 
+
 <img src="https://github.com/be-great/simple_shell/blob/main/images/2.png">
 
 ## Table of Contents
