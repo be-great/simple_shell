@@ -132,9 +132,8 @@ int main(int argc, char **argv)
 void execute_from_file(error_h_t *error_info)
 {
 	int file = open(error_info->argv[1], O_RDONLY);
-
 	char *line = NULL;
-
+	size_t len;
 	size_t line_size = 4096;
 	ssize_t read_size;
 
@@ -145,7 +144,6 @@ void execute_from_file(error_h_t *error_info)
 		error_info->status = 2;
 		return;
 	}
-
 	line = malloc(line_size);
 	if (line == NULL)
 	{
@@ -153,22 +151,25 @@ void execute_from_file(error_h_t *error_info)
 		close(file);
 		exit(EXIT_FAILURE);
 	}
-
 	while ((read_size = read_line(file, &line, &line_size)) > 0)
 	{
-		size_t len = _strlen(line);
-
+		/*-----------remove the comment*/
+		if (read_size > 0)
+			rm_comments(line, &read_size);
+		/*-------------------------------*/
+		if (is_empty_or_whitespace(line))
+		{
+			/* Skip processing for empty/whitespace lines */
+			continue;
+		}
+		len = _strlen(line);
 		if (len > 0)
 		{
 			processes(line, error_info);
 		}
 	}
-
 	if (read_size == -1)
-	{
 		perror("read");
-	}
-	close(file);
-	free(line);
+	close(file), free(line);
 }
 
