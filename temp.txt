@@ -1,30 +1,12 @@
-#include "main.h"
-
-/*static becasue we going to change it on the main.c*/
-static pid_t original_pid;
-/**
- * get_original_pid - Get the original pid of the program running
- * Return: the original pid value
- */
-pid_t get_original_pid(void)
-{
-	return (original_pid);
-}
-
-/**
-* interactive - handle the interactive mode
-* @error_info: passing the error info structure
-*/
-void interactive(error_h_t *error_info)
+void None_interactive(error_h_t *error_info)
 {
 	char *line = NULL;
+
 	size_t len = 0;
 	ssize_t read;
 
 	while (1)
 	{
-		_putchar('$');
-		_putchar(' ');
 		read = getline(&line, &len, stdin);
 		if (read == -1)
 		{
@@ -40,119 +22,156 @@ void interactive(error_h_t *error_info)
 				exit(EXIT_FAILURE);
 			}
 		}
-		/*-----------remove the comment*/
-		if (read > 0)
-			rm_comments(line, &read);
-		/*-------------------------------*/
-		processes(line, error_info);
+			/*-----------remove the comment*/
+			if (read > 0)
+				rm_comments(line, &read);
+			/*-------------------------------*/
+			if (is_empty_or_whitespace(line))
+			{
+				/* Skip processing for empty/whitespace lines */
+				continue;
+			}
+			processes(line, error_info);
+			if (error_info->status != 0)
+			{
+				free(line), exit(error_info->status);
+			}
 	}
-
 	free(line);
 }
-/**
-* None_interactive - handle the None interactive mode
-* @error_info: passing the error info structure
-*/
-void None_interactive(error_h_t *error_info)
-{
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read;
 
-	while ((read = getline(&line, &len, stdin)) != -1)
+this part :-
+if (error_info->status != 0)
+			{
+				free(line), exit(error_info->status);
+			}
+make the second command not execute :-
+echo -e "fsdfsdf\necho $?" | ./hsh 
+./hsh: 1: fsdfsdf\necho: not found
+and it should execute
+if i delete it:-
+it does not exexute the echo $? with the right number 127 .
+echo -e "fsdfsdf\necho $?" | ./hsh 
+./hsh: 1: fsdfsdf: not found
+0
+so it give me a problem passing the value of the previous status value to the echo $? case 
+
+/**
+* handle_variables - handle echo $$ and echo $?
+* @error_info: the struct has the error information
+* @original_pid: the original pid
+*/
+void handle_variables(error_h_t *error_info, pid_t original_pid)
+{
+	int i;
+
+	for (i = 0; error_info->argv[i] != NULL; i++)
 	{
-		/*-----------remove the comment*/
-		if (read > 0)
-			rm_comments(line, &read);
-		/*-------------------------------*/
-		if (is_empty_or_whitespace(line))
+		/* Handle $? variable */
+		if (_strcmp(error_info->argv[i], "$?") == 0)
 		{
-			/* Skip processing for empty/whitespace lines */
-			continue;
+			free(error_info->argv[i]);
+			error_info->argv[i] = intToString_2(error_info->status);
 		}
-		processes(line, error_info);
-		if (error_info->status != 0)
+		/* Handle $$ variable */
+		else if (_strcmp(error_info->argv[i], "$$") == 0)
 		{
-			free(line), exit(error_info->status);
+			char pid_str[10];
+
+			pidToString(original_pid, pid_str, sizeof(pid_str));
+			free(error_info->argv[i]);
+			error_info->argv[i] = _strdup(pid_str);
 		}
-	}
-	if (feof(stdin))
-	{
-		/* End of file reached, cleanup */
-		free(line), exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		perror("getline"), free(line);
-		exit(EXIT_FAILURE);
+		/* Handle other environment variables starting with $*/
+		else if (error_info->argv[i][0] == '$' && error_info->argv[i][1] != '\0')
+		{
+			char *variable = NULL;
+			size_t len = _strlen(error_info->argv[i]) - 1;
+			char *newstr;
+			int escape = 1;
+
+			newstr = (char *)malloc(len + 2);
+			_strncpy(newstr, error_info->argv[i] + escape, len + 1);
+			newstr[len + 1] = '\0';  /* Null-terminate the string */
+			variable = _getenv(newstr), free(error_info->argv[i]);
+			if (variable != NULL && variable[0] != '\0')
+				error_info->argv[i] = _strdup(variable);
+			else
+				error_info->argv[i] = _strdup("");
+			free(newstr);
+			free(variable);
+		}
 	}
 }
-
-/**
-* main - Entry point
-* @argc: number of argument passed
-* @argv: argument vector of string
-* Return: 0 Always (Success)
-*/
-int main(int argc, char **argv)
+void execute_with_child(error_h_t *error_info)
 {
-	error_h_t error_info;
-	/* Initialize error_info structure */
-	memset(&error_info, 0, sizeof(error_h_t));
-	/* Set filename */
-	error_info.fname = argv[0];
-	original_pid = getpid();
-	/* pass a file inside it there is commands to execute*/
-	if (argc > 1)
-	{
-		error_info.argv = argv;
-		execute_from_file(&error_info);
-	}
-	else
-	{
-		/* Non-interactive mode */
-		if (!isatty(STDIN_FILENO))
-		{
-			None_interactive(&error_info);
-		}
-		/* Interactive mode */
-		else
-		{
-			interactive(&error_info);
-		}
-	}
-	return (error_info.status);
-}
-/**
- * execute_from_file - execute commands from a filename
- * @error_info: error handler struct
- */
-void execute_from_file(error_h_t *error_info)
-{
-	FILE *file = fopen(error_info->argv[1], "r");
-	char *line = NULL;
-	size_t line_size = 0;
-	size_t len;
+	pid_t child_pid;
 
-	if (file == NULL)
+
+	child_pid = fork();
+	if (child_pid == -1)
 	{
-		filerror(error_info->argv[0], ": 0: cannot open ", error_info->argv[1],
-					": No such file\n");
-		error_info->status = 2;
+		perror("Error");
 		return;
 	}
-	while (getline(&line, &line_size, file) != -1)
+	if (child_pid == 0)
 	{
-
-		len = _strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
+		handle_variables(error_info, get_original_pid());
+		if (execve(error_info->path, error_info->argv, environ_copy()) == -1)
 		{
-			line[len - 1] = '\0';
+			if (errno == EACCES)
+				error_info->status = (126), exit(126);
+			error_info->status = (1), exit(1);
 		}
-
-		processes(line, error_info);
 	}
-
-	fclose(file);
+	else
+	{
+		wait(&(error_info->status));
+		if (WIFEXITED(error_info->status))
+		{
+			error_info->status = WEXITSTATUS(error_info->status);
+			if (error_info->status == 126)
+				printerr(error_info, "Permission denied");
+		}
+	}
+}
+	read = getline(&line, &len, stdin);
+	int previous_status = 0
+	while (1)
+	{
+		
+		if (read == -1)
+		{
+			/* Check for end of file */
+			if (feof(stdin))
+			{
+				break;
+			}
+			else
+			{
+				perror("getline");
+				free(line);
+				exit(EXIT_FAILURE);
+			}
+		}
+			/*-----------remove the comment*/
+			if (read > 0)
+				rm_comments(line, &read);
+			/*-------------------------------*/
+			if (is_empty_or_whitespace(line))
+			{
+				/* Skip processing for empty/whitespace lines */
+				continue;
+			}
+			if (strcmp(line, "echo $?") == 0)
+			{
+           		 printf("%d\n", previous_status);
+				 free(line);
+				 exit(error_info->status);
+			}
+			else 
+				 processes(line, error_info);
+			read = getline(&line, &len, stdin);
+	}
 	free(line);
 }

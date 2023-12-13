@@ -25,12 +25,14 @@ builtin_cmd_t *initbuiltin(void)
  * @num_tokens: the number of tokens
  * @error_info: struct of the error information
  * @line: the line gotten
+ * @commands: the commands passed
+ * @numofcommands: the number of commands
  * Return: void
 */
 
 
 int execute_builtins(char **tokens, int num_tokens,
-error_h_t *error_info, char *line)
+error_h_t *error_info, char *line, char **commands, int numofcommands)
 {
 	char *command = *tokens;
 	int builtin_size = NUM_BUILTIN;
@@ -43,10 +45,9 @@ error_h_t *error_info, char *line)
 		{
 			if (_strcmp(command, builtins[i].command_name) == 0)
 			{
-				builtins[i].builtin_func(tokens, error_info);
-
 				if (_strcmp(command, "exit") != 0)
 				{
+					builtins[i].builtin_func(tokens, error_info);
 					return (0);
 				}
 				else
@@ -56,6 +57,7 @@ error_h_t *error_info, char *line)
 					if (status != 2)
 					{
 						cleanup_memory(tokens, num_tokens, error_info);
+						free_commands(commands, numofcommands);
 						free(line);
 						exit(status);
 					}

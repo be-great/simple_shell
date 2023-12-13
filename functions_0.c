@@ -1,21 +1,5 @@
 #include "main.h"
 
-char* intToString_4(int number)
-{
-	int numDigits = numlen(number);
-
-	char* str = (char*)malloc((numDigits + 1) * sizeof(char));
-
-	if (str == NULL)
-	{
-		fprintf(stderr, "Memory allocation failed\n");
-		exit(EXIT_FAILURE);
-	}
-
-	sprintf(str, "%d", number);
-
-	return (str);
-}
 /**
 * handle_variables - handle echo $$ and echo $?
 * @error_info: the struct has the error information
@@ -31,7 +15,7 @@ void handle_variables(error_h_t *error_info, pid_t original_pid)
 		if (_strcmp(error_info->argv[i], "$?") == 0)
 		{
 			free(error_info->argv[i]);
-			error_info->argv[i] = intToString_4(error_info->status);
+			error_info->argv[i] = intToString_2(error_info->status);
 
 		}
 		/* Handle $$ variable */
@@ -47,23 +31,19 @@ void handle_variables(error_h_t *error_info, pid_t original_pid)
 		else if (error_info->argv[i][0] == '$' && error_info->argv[i][1] != '\0')
 		{
 			char *variable = NULL;
-
 			size_t len = _strlen(error_info->argv[i]) - 1;
 			char *newstr;
-
 			int escape = 1;
 
 			newstr = (char *)malloc(len + 2);
 			_strncpy(newstr, error_info->argv[i] + escape, len + 1);
-			newstr[len + 1] = '\0';  /* Null-terminate the string */
-			variable = _getenv(newstr);
+			newstr[len + 1] = '\0', variable = _getenv(newstr);
 			free(error_info->argv[i]);
 			if (variable != NULL && variable[0] != '\0')
 				error_info->argv[i] = _strdup(variable);
 			else
 				error_info->argv[i] = _strdup("");
-			free(newstr);
-			free(variable);
+			free(newstr), free(variable);
 		}
 	}
 }

@@ -110,7 +110,7 @@ int exit_cmd(char **argv, error_h_t *error_info)
 	if (argv[0] != NULL && (argv[1] == NULL ||
 			(_strcmp(argv[0], "exit") == 0 && argv[1] == NULL)))
 	{
-		return (0);
+		return (error_info->status);
 	}
 
 	else if (argv[1] != NULL && argv[0] != NULL)

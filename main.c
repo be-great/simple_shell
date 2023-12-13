@@ -3,9 +3,9 @@
 /*static becasue we going to change it on the main.c*/
 static pid_t original_pid;
 /**
- * get_original_pid - Get the original pid of the program running
- * Return: the original pid value
- */
+* get_original_pid - Get the original pid of the program running
+* Return: the original pid value
+*/
 pid_t get_original_pid(void)
 {
 	return (original_pid);
@@ -18,6 +18,7 @@ pid_t get_original_pid(void)
 void interactive(error_h_t *error_info)
 {
 	char *line = NULL;
+
 	size_t len = 0;
 	ssize_t read;
 
@@ -87,10 +88,6 @@ void None_interactive(error_h_t *error_info)
 				continue;
 			}
 			processes(line, error_info);
-			if (error_info->status != 0)
-			{
-				free(line), exit(error_info->status);
-			}
 	}
 	free(line);
 }
@@ -124,43 +121,55 @@ int main(int argc, char **argv)
 		}
 		/* Interactive mode */
 		else
-		{
 			interactive(&error_info);
-		}
 	}
 	return (error_info.status);
 }
-
 /**
- * execute_from_file - execute commands from a filename
- * @error_info: error handler struct
- */
+* execute_from_file - execute commands from a filename
+* @error_info: error handler struct
+*/
 void execute_from_file(error_h_t *error_info)
 {
-	FILE *file = fopen(error_info->argv[1], "r");
+	int file = open(error_info->argv[1], O_RDONLY);
 	char *line = NULL;
-	size_t line_size = 0;
 	size_t len;
+	size_t line_size = 4096;
+	ssize_t read_size;
 
-	if (file == NULL)
+	if (file == -1)
 	{
 		filerror(error_info->argv[0], ": 0: cannot open ", error_info->argv[1],
-					": No such file\n");
+				": No such file\n");
 		error_info->status = 2;
 		return;
 	}
-	while (getline(&line, &line_size, file) != -1)
+	line = malloc(line_size);
+	if (line == NULL)
 	{
-
-		len = _strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
-		{
-			line[len - 1] = '\0';
-		}
-
-		processes(line, error_info);
+		perror("malloc");
+		close(file);
+		exit(EXIT_FAILURE);
 	}
-
-	fclose(file);
-	free(line);
+	while ((read_size = read_line(file, &line, &line_size)) > 0)
+	{
+		/*-----------remove the comment*/
+		if (read_size > 0)
+			rm_comments(line, &read_size);
+		/*-------------------------------*/
+		if (is_empty_or_whitespace(line))
+		{
+			/* Skip processing for empty/whitespace lines */
+			continue;
+		}
+		len = _strlen(line);
+		if (len > 0)
+		{
+			processes(line, error_info);
+		}
+	}
+	if (read_size == -1)
+		perror("read");
+	close(file), free(line);
 }
+
