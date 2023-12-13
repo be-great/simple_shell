@@ -68,7 +68,6 @@ After each step, press the `enter` key
 - `exit status`: Exits the shell with a status code.
 - `setenv`: Sets an environment varable or modify an existing one.
 - `unsetenv`: Deletes an environment varable.
-
 - **File Input:**
 - Take a file as an input `simple_shell [filename]`.
 
