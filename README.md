@@ -11,7 +11,7 @@ A simple shell implementation in C.
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-- [Acknowledgments](#acknowledgments)
+- [Authors](#authors)
 
 ## Introduction
 
@@ -33,14 +33,41 @@ This project is a simple shell implementation written in C. It provides a basic 
 
 ### Installation
 
-1. **Clone the repository:**
-    git clone `https://github.com/be-great/simple_shell.git`
+1. **Clone the repository and compile the code:**
 
-2. **Navigate to project directory:**
-    cd `simple_shell`
+   ```bash
+   git clone https://github.com/be-great/simple_shell.git && \
+   cd simple_shell && \
+   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
-3. **compile the code:**
-    gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+2. **Run the shell:**
+
+   ```bash
+   ./hsh
+
+
+## Usage
+
+- **Basic Usage:**
+- Enter commands and press Enter to execute.
+- Use `exit` or `Ctrl + D`to exit the shell.
+
+- **Built-in Commands:**
+- `cd`: Change the current working directory.
+- `exit`: Exit the shell.
+- `exit status`: Exits the shell with a status code.
+- `setenv`: Sets an environment varable or modify an existing one.
+- `unsetenv`: Deletes an environment varable.
+
+- **File Input:**
+- Take a file as an input `simple_shell [filename]`.
+
+
+
+## Authors
+
+- Isaiah Woko
+- Ahed Eisa(be-great)
 
 
 ## Files
