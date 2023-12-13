@@ -121,6 +121,7 @@ int _unsetenv(char *name);
 
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
+ssize_t read_line(int fd, char **line, size_t *line_size);
 /*Task 7 : remove the use of strtok*/
 char **_strtow(char *str, const char *delim);
 /*Task 14 : handle variable replacement*/

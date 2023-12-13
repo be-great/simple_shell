@@ -131,7 +131,6 @@ int main(int argc, char **argv)
 	}
 	return (error_info.status);
 }
-
 /**
 * execute_from_file - execute commands from a filename
 * @error_info: error handler struct
@@ -142,31 +141,41 @@ void execute_from_file(error_h_t *error_info)
 
 	char *line = NULL;
 
-	size_t len;
-	size_t line_size = 0;
+	size_t line_size = 4096;
 	ssize_t read_size;
 
 	if (file == -1)
 	{
 		filerror(error_info->argv[0], ": 0: cannot open ", error_info->argv[1],
-					": No such file\n");
+				": No such file\n");
 		error_info->status = 2;
 		return;
 	}
-	while ((read_size = read(file, line, line_size)) != -1)
+
+	line = malloc(line_size);
+	if (line == NULL)
 	{
-		if (read_size == 0)
-			break;
-
-		len = _strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
-		{
-			line[len - 1] = '\0';
-		}
-
-		processes(line, error_info);
+		perror("malloc");
+		close(file);
+		exit(EXIT_FAILURE);
 	}
 
+	while ((read_size = read_line(file, &line, &line_size)) > 0)
+	{
+		size_t len = _strlen(line);
+		/* Print the length of the line */
+		/*printf("len : %ld , read_size : %ld , line : %s\n",len, read_size, line);*/
+		if (len > 0)
+		{
+			processes(line, error_info);
+		}
+	}
+
+	if (read_size == -1)
+	{
+		perror("read");
+	}
 	close(file);
 	free(line);
 }
+

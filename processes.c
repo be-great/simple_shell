@@ -1,6 +1,52 @@
 #include "main.h"
 
 /**
+ * read_line - read the line from input file
+ * @fd: file description
+ * @line: the line
+ * @line_size: line size
+ * Return: readed line
+ */
+ssize_t read_line(int fd, char **line, size_t *line_size)
+{
+	ssize_t read_size = 0;
+	ssize_t total_size = 0;
+	char buffer;
+
+	while ((read_size = read(fd, &buffer, 1)) > 0)
+	{
+		if (total_size >= (ssize_t)*line_size - 2)
+		{
+			/* Double the buffer size if needed */
+			*line_size *= 2;
+			*line = realloc(*line, *line_size);
+			if (*line == NULL)
+			{
+				perror("realloc");
+				exit(EXIT_FAILURE);
+			}
+		}
+
+		/* Store the character in the line buffer */
+		(*line)[total_size++] = buffer;
+
+		if (buffer == '\n')
+		{
+			/* Null-terminate the string */
+			(*line)[total_size] = '\0';
+			break;
+		}
+	}
+
+	if (read_size == 0 && total_size == 0)
+	{
+		return (0); /* End of file */
+	}
+
+	return (total_size);
+}
+
+/**
 * rm_comments - remove the commnets we find
 * @line: the string
 * @read: number of character readed include '\n'
