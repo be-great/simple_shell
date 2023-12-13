@@ -139,8 +139,9 @@ int main(int argc, char **argv)
 void execute_from_file(error_h_t *error_info)
 {
 	int file = open(error_info->argv[1], O_RDONLY);
+
 	char *line = NULL;
-	FILE *file_ptr;
+
 	size_t len;
 	size_t line_size = 0;
 	ssize_t read_size;
@@ -152,16 +153,7 @@ void execute_from_file(error_h_t *error_info)
 		error_info->status = 2;
 		return;
 	}
-	file_ptr = fdopen(file, "r");
-	if (file_ptr == NULL)
-	{
-		perror("fdopen");
-		close(file);
-		free(line);
-		exit(EXIT_FAILURE);
-	}
-
-	while ((read_size = getline(&line, &line_size, file_ptr)) != -1)
+	while ((read_size = read(file, line, line_size)) != -1)
 	{
 		if (read_size == 0)
 			break;
@@ -174,6 +166,7 @@ void execute_from_file(error_h_t *error_info)
 
 		processes(line, error_info);
 	}
-	fclose(file_ptr);
+
+	close(file);
 	free(line);
 }
