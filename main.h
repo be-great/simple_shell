@@ -93,7 +93,7 @@ int unsetenv_builtin(char **argv, error_h_t *error_info);
 int changeDir(char *command, size_t maxpath, error_h_t *error_info);
 builtin_cmd_t *initbuiltin(void);
 int execute_builtins(char **tokens, int num_tokens,
-			error_h_t *error_info, char *line);
+			error_h_t *error_info, char *line, char **commands, int numofcommands);
 
 /*string functions*/
 int isnumber(char numbers[]);
@@ -118,7 +118,9 @@ size_t pidlen(pid_t pid);
 int _strncmp(const char *str1, const char *str2, size_t n);
 int _setenv(char *name, char *value, int overwrite);
 int _unsetenv(char *name);
-
+/*Task ;*/
+char **split_commands(char *line, int *num_commands);
+void free_commands(char **commands, int numofcommands);
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
 ssize_t read_line(int fd, char **line, size_t *line_size);
