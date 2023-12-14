@@ -139,9 +139,9 @@ void execute_from_file(error_h_t *error_info)
 
 	if (file == -1)
 	{
-		filerror(error_info->argv[0], ": 0: cannot open ", error_info->argv[1],
-				": No such file\n");
-		error_info->status = 2;
+		filerror(error_info->argv[0], ": 0: Can't open ", error_info->argv[1],
+				"\n");
+		error_info->status = 127;
 		return;
 	}
 	line = malloc(line_size);
