@@ -68,3 +68,4 @@ error_h_t *error_info, char *line, char **commands, int numofcommands)
 	}
 	return (-1);
 }
+

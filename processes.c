@@ -161,3 +161,4 @@ void free_commands(char **commands, int numofcommands)
 	}
 	free(commands);
 }
+
