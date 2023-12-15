@@ -71,6 +71,11 @@ void handle_or_commands(char *command, error_h_t *error_info)
 		}
 
 		cleanup_memory(argv, num_subtokens, error_info);
+		if (error_info->status == 0)
+		{
+			break;
+		}
+		
 	}
 
 	/* Free memory for '||' commands*/
