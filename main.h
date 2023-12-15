@@ -121,7 +121,7 @@ int _unsetenv(char *name);
 /*Task ;, || , &&*/
 char **split_commands(char *line, int *num_commands, const char *delimiters);
 void free_commands(char **commands, int numofcommands);
-void handle_and_commands(char *command, error_h_t *error_info);
+void handle_logical_operators(char *command, error_h_t *error_info);
 void handle_or_commands(char *command, error_h_t *error_info);
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
@@ -131,4 +131,6 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char **_strtow(char *str, const char *delim);
 /*Task 14 : handle variable replacement*/
 pid_t get_original_pid(void);
+
+
 #endif

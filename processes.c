@@ -94,15 +94,10 @@ void processes(char *line, error_h_t *error_info)
 	for (i = 0; i < num_commands; i++)
 	{
 		command = commands[i];
-		if (strstr(command, "&&") != NULL)
+		if (strstr(command, "&&") != NULL || strstr(command, "||") != NULL)
 		{
-			/* Handle '&&' logic*/
-			handle_and_commands(command, error_info);
-		}
-		else if (strstr(command, "||") != NULL)
-		{
-			/* Handle '||' logic*/
-			handle_or_commands(command, error_info);
+    		/* Handle '&&' and '||' logic combined */
+    		handle_logical_operators(command, error_info);
 		}
 		else
 		{
