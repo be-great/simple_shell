@@ -118,9 +118,11 @@ size_t pidlen(pid_t pid);
 int _strncmp(const char *str1, const char *str2, size_t n);
 int _setenv(char *name, char *value, int overwrite);
 int _unsetenv(char *name);
-/*Task ;*/
-char **split_commands(char *line, int *num_commands);
+/*Task ;, || , &&*/
+char **split_commands(char *line, int *num_commands, const char *delimiters);
 void free_commands(char **commands, int numofcommands);
+void handle_and_commands(char *command, error_h_t *error_info);
+void handle_or_commands(char *command, error_h_t *error_info);
 /*Task 16*/
 void execute_from_file(error_h_t *error_info);
 ssize_t read_line(int fd, char **line, size_t *line_size);
